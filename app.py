@@ -48,35 +48,42 @@ def predict_sentiment(review: str) -> tuple[Literal["Positive", "Negative"], flo
 # Load model
 model = load_rnn_model()
 
-# UI Styling
+# Theme Detection for Dark & Light Modes
+theme_color = st.get_option("theme.primaryColor")
+background_color = st.get_option("theme.backgroundColor")
+text_color = st.get_option("theme.textColor")
+border_color = theme_color if theme_color else "#2E86C1"
+
+# UI Styling (Dynamic for Dark Mode)
 st.markdown(
-    """
+    f"""
     <style>
-        .stTextArea textarea {
+        .stTextArea textarea {{
             font-size: 16px;
-            height: 150px !important;
-        }
-        .stButton>button {
-            background-color: #2E86C1;
+            height: 200px !important;
+        }}
+        .stButton>button {{
+            background-color: {border_color};
             color: white;
             border-radius: 8px;
             font-size: 18px;
             padding: 10px 20px;
             width: 100%;
-        }
-        .prediction-container {
-            border: 2px solid #2E86C1;
+        }}
+        .prediction-container {{
+            border: 2px solid {border_color};
             border-radius: 10px;
-            background-color: #F0F8FF;
+            background-color: {background_color};
             font-size: 20px;
             text-align: center;
-            height: 150px;
+            height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            padding: 16px;
-        }
+            padding: 20px;
+            color: {text_color};
+        }}
     </style>
     """,
     unsafe_allow_html=True,
