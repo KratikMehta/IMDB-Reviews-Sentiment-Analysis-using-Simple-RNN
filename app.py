@@ -2,9 +2,9 @@ from typing import Literal
 
 import numpy as np
 import streamlit as st
-from keras.api.datasets import imdb
-from keras.api.models import Sequential, load_model
-from keras.api.preprocessing import sequence
+from keras.datasets import imdb
+from keras.models import Sequential, load_model
+from keras.preprocessing import sequence
 from numpy.typing import NDArray
 
 # Configure page
