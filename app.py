@@ -2,9 +2,9 @@ from typing import Literal
 
 import numpy as np
 import streamlit as st
-from keras.datasets import imdb
-from keras.models import Sequential, load_model
-from keras.preprocessing import sequence
+from keras.datasets import imdb  # type: ignore
+from keras.models import load_model  # type: ignore
+from keras.preprocessing import sequence  # type: ignore
 from numpy.typing import NDArray
 
 # Configure page
@@ -17,7 +17,7 @@ st.set_page_config(
 
 # Load the RNN model (cached for efficiency)
 @st.cache_resource
-def load_rnn_model() -> Sequential:
+def load_rnn_model():
     return load_model("models/imdb_rnn.keras")
 
 
@@ -38,15 +38,19 @@ def preprocess_input(text: str) -> NDArray[np.int64]:
     return sequence.pad_sequences(encoded_input, maxlen=500)
 
 
+# Load model
+model = load_rnn_model()
+
+
 # Sentiment prediction function
-def predict_sentiment(review: str) -> tuple[Literal["Positive", "Negative"], float]:
+def predict_sentiment(review: str) -> tuple[Literal["Positive", "Negative", "Error"], float]:
+    if model is None:
+        st.error("Model failed to load. Please check that 'models/imdb_rnn.keras' exists and is a valid Keras model.")
+        return ("Error", 0.0)
     preprocessed_review = preprocess_input(review)
     prediction = model.predict(preprocessed_review, verbose=0)[0][0]
     return ("Positive" if prediction > 0.5 else "Negative", prediction)
 
-
-# Load model
-model = load_rnn_model()
 
 # Theme Detection for Dark & Light Modes
 theme_color = st.get_option("theme.primaryColor")
